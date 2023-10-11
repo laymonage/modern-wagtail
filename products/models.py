@@ -16,3 +16,6 @@ class Product(models.Model):
     @property
     def final_price(self):
         return self.price * (1 - self.discount / 100)
+
+    def __str__(self) -> str:
+        return self.name
