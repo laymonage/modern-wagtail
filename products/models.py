@@ -1,7 +1,11 @@
 from decimal import Decimal
 from django.db import models
 
+from wagtail.admin.panels import FieldPanel
+from wagtail.snippets.models import register_snippet
 
+
+@register_snippet
 class Product(models.Model):
     name = models.CharField(max_length=255)
     description = models.TextField()
@@ -22,3 +26,12 @@ class Product(models.Model):
 
     def __str__(self) -> str:
         return self.name
+
+    panels = [
+        FieldPanel("name"),
+        FieldPanel("description"),
+        FieldPanel("price"),
+        FieldPanel("discount"),
+        FieldPanel("stock"),
+        FieldPanel("image_url"),
+    ]
