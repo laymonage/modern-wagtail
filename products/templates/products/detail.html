@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block title %}{{ product.name }}{% endblock title%}
+{% block content %}
+  <a href="..">Back</a>
+  <h1>{{ product.name }}</h1>
+  <p>{{ product.description }}</p>
+  <div>
+    <span><b>${{ product.final_price }}</b></span>
+    {% if product.discount %}
+      <div>
+        <span>{{ product.discount }}% off</span>
+        <span>(was: ${{ product.price }})</span>
+      </div>
+    {% endif %}
+  </div>
+  <div>
+    <span>{{ product.stock }} left in stock.</span>
+  </div>
+  <img src="{{ product.image_url }}" />
+{% endblock content %}
