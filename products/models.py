@@ -1,3 +1,4 @@
+from decimal import Decimal
 from django.db import models
 
 
@@ -15,7 +16,9 @@ class Product(models.Model):
 
     @property
     def final_price(self):
-        return self.price * (1 - self.discount / 100)
+        return Decimal(
+            self.price * (Decimal("1.0") - Decimal(str(self.discount)) / Decimal("100"))
+        ).quantize(Decimal("1.00"))
 
     def __str__(self) -> str:
         return self.name
