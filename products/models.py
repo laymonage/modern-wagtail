@@ -2,11 +2,12 @@ from decimal import Decimal
 from django.db import models
 
 from wagtail.admin.panels import FieldPanel
+from wagtail.models import PreviewableMixin
 from wagtail.snippets.models import register_snippet
 
 
 @register_snippet
-class Product(models.Model):
+class Product(PreviewableMixin, models.Model):
     name = models.CharField(max_length=255)
     description = models.TextField()
     price = models.DecimalField(max_digits=5, decimal_places=2)
@@ -35,3 +36,17 @@ class Product(models.Model):
         FieldPanel("stock"),
         FieldPanel("image_url"),
     ]
+
+    preview_modes = [
+        ("index", "Index"),
+        ("detail", "Detail"),
+    ]
+    default_preview_mode = "detail"
+
+    def get_preview_template(self, request, preview_mode):
+        return f"products/{preview_mode}.html"
+
+    def get_preview_context(self, request, preview_mode):
+        if preview_mode == "index":
+            return {"products": [self, *Product.objects.exclude(pk=self.pk)]}
+        return {"product": self}
