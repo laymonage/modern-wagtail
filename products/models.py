@@ -1,13 +1,13 @@
 from decimal import Decimal
 from django.db import models
 
-from wagtail.admin.panels import FieldPanel
-from wagtail.models import PreviewableMixin, RevisionMixin
+from wagtail.admin.panels import FieldPanel, PublishingPanel
+from wagtail.models import DraftStateMixin, PreviewableMixin, RevisionMixin
 from wagtail.snippets.models import register_snippet
 
 
 @register_snippet
-class Product(RevisionMixin, PreviewableMixin, models.Model):
+class Product(DraftStateMixin, RevisionMixin, PreviewableMixin, models.Model):
     name = models.CharField(max_length=255)
     description = models.TextField()
     price = models.DecimalField(max_digits=5, decimal_places=2)
@@ -35,6 +35,7 @@ class Product(RevisionMixin, PreviewableMixin, models.Model):
         FieldPanel("discount"),
         FieldPanel("stock"),
         FieldPanel("image_url"),
+        PublishingPanel(),
     ]
 
     preview_modes = [
@@ -48,5 +49,10 @@ class Product(RevisionMixin, PreviewableMixin, models.Model):
 
     def get_preview_context(self, request, preview_mode):
         if preview_mode == "index":
-            return {"products": [self, *Product.objects.exclude(pk=self.pk)]}
+            return {
+                "products": [
+                    self,
+                    *Product.objects.filter(live=True).exclude(pk=self.pk),
+                ]
+            }
         return {"product": self}
