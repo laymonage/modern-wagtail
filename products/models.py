@@ -2,12 +2,23 @@ from decimal import Decimal
 from django.db import models
 
 from wagtail.admin.panels import FieldPanel, PublishingPanel
-from wagtail.models import DraftStateMixin, PreviewableMixin, RevisionMixin
+from wagtail.models import (
+    DraftStateMixin,
+    LockableMixin,
+    PreviewableMixin,
+    RevisionMixin,
+)
 from wagtail.snippets.models import register_snippet
 
 
 @register_snippet
-class Product(DraftStateMixin, RevisionMixin, PreviewableMixin, models.Model):
+class Product(
+    DraftStateMixin,
+    LockableMixin,
+    RevisionMixin,
+    PreviewableMixin,
+    models.Model,
+):
     name = models.CharField(max_length=255)
     description = models.TextField()
     price = models.DecimalField(max_digits=5, decimal_places=2)
