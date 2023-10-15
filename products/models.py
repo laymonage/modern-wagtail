@@ -7,12 +7,14 @@ from wagtail.models import (
     LockableMixin,
     PreviewableMixin,
     RevisionMixin,
+    WorkflowMixin,
 )
 from wagtail.snippets.models import register_snippet
 
 
 @register_snippet
 class Product(
+    WorkflowMixin,
     DraftStateMixin,
     LockableMixin,
     RevisionMixin,
